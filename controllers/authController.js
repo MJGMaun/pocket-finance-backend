@@ -11,9 +11,9 @@ module.exports = {
 		});
 
 		try {
-			const savedUser = await newUser.save();
+			const saved_user = await newUser.save();
 
-			res.status(201).json(savedUser);
+			res.status(201).json(saved_user);
 		} catch (error) {
 			res.status(500).json(error);
 		}
@@ -28,13 +28,13 @@ module.exports = {
 
 			depassword !== req.body.password && res.status(401).json("Wrong password");
 
-			const {password, __v, createdAt, updatedAt, ...others } = user._doc;
+			const {password, __v, created_at, updated_at, ...others } = user._doc;
 
-			const authToken = jwt.sign({
-				id: user._id, isAdmin: user.isAdmin
+			const auth_token = jwt.sign({
+				id: user._id, is_admin: user.is_admin
 			}, process.env.JWT_SECRET, {expiresIn: "21d"})
 
-			res.status(200).json({ ...others, authToken})
+			res.status(200).json({ ...others, auth_token})
 		} catch (error) {
 			res.status(500)
 		}
