@@ -8,13 +8,13 @@ module.exports = {
 		}
 
 		try {
-			const updatedUser = await User.findByIdAndUpdate(
+			const updated_user = await User.findByIdAndUpdate(
 				req.params.id, {
 					$set: req.body
 				}, { new:true }
 			)
 
-			const {password, __v, created_at, updated_at, ...others } = updatedUser._doc;
+			const {password, __v, created_at, updated_at, ...others } = updated_user._doc;
 
 			return res.status(200).json({ ...others });
 		} catch (error) {
@@ -25,7 +25,7 @@ module.exports = {
 		try {
 			await User.findByIdAndDelete(req.params.id)
 
-			return res.status(200).json("Account deleted");
+			return res.status(200).json({ message: "Account deleted" });
 		} catch (error) {
 			res.status(500).json(error);
 		}
@@ -33,17 +33,17 @@ module.exports = {
 	getUser: async (req, res) => {
 		try {
 			const user = await User.findById(req.params.id);
-			!user && res.status(401).json("No user found");
-			const {password, __v, created_at, updated_at, ...userData } = user._doc;
-			res.status(200).json({ ...userData})
+			!user && res.status(401).json({ message: "No user found" });
+			const {password, __v, created_at, updated_at, ...user_data } = user._doc;
+			res.status(200).json({ ...user_data})
 		} catch (error) {
 			res.status(500)
 		}
 	},
 	getAllUsers: async (req, res) => {
 		try {
-			const allUsers = await User.find();
-			res.status(200).json({ ...allUsers})
+			const all_users = await User.find();
+			res.status(200).json({ ...all_users})
 		} catch (error) {
 			res.status(500)
 		}

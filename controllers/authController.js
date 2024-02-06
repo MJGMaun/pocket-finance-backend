@@ -4,14 +4,14 @@ const jwt = require("jsonwebtoken");
 
 module.exports = {
 	createUser: async (req, res) => {
-		const newUser = new User({
+		const new_user = new User({
 			username: req.body.username,
 			email: req.body.email,
 			password: CryptoJS.AES.encrypt(req.body.password, process.env.SECRET),
 		});
 
 		try {
-			const saved_user = await newUser.save();
+			const saved_user = await new_user.save();
 
 			res.status(201).json(saved_user);
 		} catch (error) {
@@ -21,12 +21,12 @@ module.exports = {
 	loginUser: async (req, res) => {
 		try {
 			const user = await User.findOne({email: req.body.email});
-			!user && res.status(401).json("Wrong login details")
+			!user && res.status(401).json({ message: "Invalid credentials" })
 
-			const depcryptedPass = CryptoJS.AES.decrypt(user.password, process.env.SECRET)
-			const depassword = depcryptedPass.toString(CryptoJS.enc.Utf8) // turn pass to string
+			const depcrypted_pass = CryptoJS.AES.decrypt(user.password, process.env.SECRET)
+			const de_password = depcrypted_pass.toString(CryptoJS.enc.Utf8) // turn pass to string
 
-			depassword !== req.body.password && res.status(401).json("Wrong password");
+			de_password !== req.body.password && res.status(401).json({ message: "Wrong password" });
 
 			const {password, __v, created_at, updated_at, ...others } = user._doc;
 
